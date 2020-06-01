@@ -71,6 +71,8 @@ class ViewController: UIViewController {
                 switch evalErro.code {
                 case LAError.Code.biometryNotEnrolled:
                     print("Biometry Not enrolled")
+                    // simulate if face id not enrolled scenario so pop appears to make the user enroll in face id
+                    sendToSettings()
                 default:
                     print("general error")
                 }
@@ -98,5 +100,27 @@ class ViewController: UIViewController {
                 
         }
     }
+    
+func sendToSettings(){
+    DispatchQueue.main.async {
+        
+    
+        let ac = UIAlertController(title: "Bio enrollment", message: "Would you like to enroll now?", preferredStyle: .alert)
+        
+       
+        
+        ac.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
+            if let url = URL(string: UIApplication.openSettingsURLString){
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }))
+        
+        ac.addAction(UIAlertAction(title: "NO", style: .default, handler:nil))
+        
+        
+            self.present(ac, animated: true, completion: nil)
+            
+    }
+}
 }
 
