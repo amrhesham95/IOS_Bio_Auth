@@ -14,7 +14,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         context.localizedCancelTitle = "End Session"
-        context.localizedFallbackTitle = "Use Passcode"
+        context.localizedFallbackTitle = "Fallback!"
         context.localizedReason = "The app needs your authentaction."
         
         // if the user has unlocked the device using touch ID already .. my app can ignore authenticating him again for some duration .. use the following property to set this duration
@@ -51,6 +51,7 @@ class ViewController: UIViewController {
                             print("Time out")
                         case LAError.Code.userFallback:
                             print("fallback")
+                            self.promptForCode()
                         case LAError.Code.authenticationFailed:
                             print("failed")
                         default:
@@ -60,9 +61,9 @@ class ViewController: UIViewController {
                 }
                
             }
-            Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { (t) in
-                               self.context.invalidate()
-                           }
+//            Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { (t) in
+//                               self.context.invalidate()
+//                           }
         }else{
             print("can't evaluate")
             if let err = errorCanEval{
@@ -76,6 +77,26 @@ class ViewController: UIViewController {
             }
         }
     }
-
+    func promptForCode(){
+        DispatchQueue.main.async {
+            
+        
+            let ac = UIAlertController(title: "Enter code", message: "Enter user code", preferredStyle: .alert)
+            
+            ac.addTextField { (tf) in
+                tf.placeholder = "Enter user code here"
+                tf.keyboardType = .numberPad
+                // to disable copying the text
+                tf.isSecureTextEntry = true
+            }
+            
+            ac.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                print(ac.textFields?.first?.text ?? "no value")
+            }))
+            
+                self.present(ac, animated: true, completion: nil)
+                
+        }
+    }
 }
 
