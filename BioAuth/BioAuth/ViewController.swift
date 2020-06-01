@@ -58,7 +58,15 @@ class ViewController: UIViewController {
             }
         }else{
             print("can't evaluate")
-            print(errorCanEval?.localizedDescription ?? "error has no description")
+            if let err = errorCanEval{
+                let evalErro = LAError(_nsError: err as! NSError)
+                switch evalErro.code {
+                case LAError.Code.biometryNotEnrolled:
+                    print("Biometry Not enrolled")
+                default:
+                    print("general error")
+                }
+            }
         }
     }
 
