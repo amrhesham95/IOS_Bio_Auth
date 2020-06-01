@@ -42,10 +42,13 @@ class ViewController: UIViewController {
                     print("evaluted successfully")
                 }else{
                     if let err = error{
-                        let evalErro = LAError(_nsError: error as! NSError)
+                        let evalErro = LAError(_nsError: err as NSError)
                         switch evalErro.code {
                         case LAError.Code.userCancel:
                             print("User has canceled")
+                        case LAError.Code.appCancel:
+                            // when the time of the authentication context runs out
+                            print("Time out")
                         case LAError.Code.userFallback:
                             print("fallback")
                         case LAError.Code.authenticationFailed:
@@ -55,7 +58,11 @@ class ViewController: UIViewController {
                         }
                     }
                 }
+               
             }
+            Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { (t) in
+                               self.context.invalidate()
+                           }
         }else{
             print("can't evaluate")
             if let err = errorCanEval{
